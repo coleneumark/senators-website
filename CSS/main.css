@@ -1,0 +1,248 @@
+
+
+
+/* -- General -- */
+body {
+    background-color: #fafafa;
+    font-family: 'Raleway', Helvetica;
+    font-style: normal;
+    font-weight: 400;
+    color: #1D2840;
+}
+
+.wrapper {
+    margin: auto;
+    max-width: 1180px;
+}
+
+/* -- Navigation bar -- */
+.navbar {
+    position: fixed;
+    width: 100vw;
+    height: 80px;
+    left: 0px;
+    top: 0px;
+    background: #1D2840;
+    color: #ffffff;
+    z-index: 100;
+}
+
+.navbar img {
+    position: relative;
+    width: 78px;
+    height: 59px;
+    left: 8px;
+    top: 5px;
+}
+
+h1 {
+    position: relative;
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 47px;
+    left: 16px;
+    top: -6px;
+    display: inline-block;
+} 
+
+/* -- Overview Tables -- */
+#total table {
+    width: 580px;
+    filter: drop-shadow(2px 6px 7px rgba(0, 0, 0, 0.16));
+    background: #ffffff;
+    border-radius: 10px 10px 10px 10px;
+    border-collapse:collapse;
+    float: left;
+    margin-right: 10px;
+
+}
+
+#total th {
+    background: #1D2840;
+    border-radius: 10px 0px 0px 0px;
+    height: 50px;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 33px;
+    color: #FFFFFF;
+    text-align: left;
+    padding-left: 14px;
+}
+
+#total th:last-child {
+    border-radius: 0px 10px 0px 0px;
+    text-align: right;
+    padding-right: 14px;
+}
+
+#total td {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 21px;
+    padding: 10px 5px 10px 14px;
+    
+}
+
+#total td:last-child {
+    padding: 10px 14px 10px 5px;
+}
+
+.b_nav {
+    height: 100px;
+}
+
+/* -- Filter -- */
+
+#filter {
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+select {
+    margin-left: 5px;
+    margin-right: 25px;
+    min-width: 200px;
+    height: 36px;
+    font-size: 16px;
+    border-color: #1D2840;
+    border-radius: 5px;
+    padding-left: 8px;
+    cursor: pointer;
+    appearance: none;
+    padding-right: 8px;
+    /* -- Change dropdown arrow: https://www.heapcoding.com/how-to-change-select-dropdown-arrow-in-css/ -- */
+    background-image: url("../images/arrow.svg");
+    background-repeat: no-repeat;
+    background-position: 174px 7px;
+}
+
+select:hover {
+    box-shadow: 2px 6px 7px rgba(0, 0, 0, 0.16);
+}
+
+#remove_filter {
+    display: none;
+    font-weight: 400;
+    color: #D93654;
+}
+
+#remove_filter:hover {
+    color: #1D2840;
+    cursor: pointer;
+}
+
+/* -- Senator List -- */
+
+
+h2 {
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 33px;
+    padding-top: 70px;
+}
+
+.sen_overview {
+    clear: both;
+    min-height: 600px;
+    overflow: auto;
+    margin-bottom: 40px;
+}
+
+.sen_tile {
+    border: 1px solid #1D2840;
+    width: 380px;
+    height: 246px;
+    margin: 5px;
+    display: block;
+    float: left;
+    background-color: #ffffff;
+    box-shadow: 2px 6px 7px rgba(0, 0, 0, 0.16);
+    border-radius: 5px;
+    text-align: center;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 21px;
+}
+
+.main_details {
+    display: inline-block;
+    width: 380px;
+    height: 206px;
+    border-right: 1px solid #1D2840;
+    margin-top: 20px;
+    float: left;
+}
+
+.name {
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 28px;
+    position: relative;
+    top: 45px; 
+}
+
+.first_line {
+    position: relative;
+    top: 37px;
+}
+
+.title {
+    position: relative;
+    top: 65px; 
+}
+
+.show_details {
+    position: relative;
+    top: 98px;
+    font-size: 14px;
+    color: #D93654;
+}
+
+.show_details:hover {
+    color: #1D2840;
+    cursor: pointer;
+}
+
+.details {
+    float:left;
+    width: 380px;
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.details table{
+    margin-top: 20px;
+    margin-left:14px;
+    margin-right:14px;
+}
+
+.details td {
+    text-align: left;
+    vertical-align: top;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.details td:first-child {
+    min-width: 90px;
+    font-weight: 500;
+}
+
+
+/** Footer **/
+
+footer {
+    height: 200px;
+    padding-top: 50px;
+    border: 10px solid #1D2840;
+    margin-left: -10px;
+    margin-bottom: -10px;
+    width: 100%;
+    color: #ffff;
+    background-color: #1D2840;
+}
+
+footer td {
+    width: 300px;
+}

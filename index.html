@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Json Project</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="CSS/main.css">
+    <style>
+        
+        
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div class="wrapper">
+            <img src="images/flag.svg">
+            <h1>US Senators</h1>
+        </div>
+    </div>
+    
+    <div class="b_nav"></div> <!-- Blank space behind navbar -->
+    
+    
+    <div class="wrapper">
+        <!-- Party overview tables (generated in JS) -->
+        <div id="total"></div>
+        
+        <div class="sen_overview">
+            <h2>Senators</h2>
+            <!-- Filter (generated in JS) -->
+            <div id="filter"></div>
+            <!-- Senator tiles (generated in JS)
+            If JSON File is not loaded, it will show the error message.-->
+            <div id="senators"><b>Error:</b> The JSON File couldn't be loaded. Please check that the file is in the same folder and is called <b>senators.json</b>.</div>
+        </div>
+        
+
+    </div>
+    <!-- Footer -->
+    <footer>
+        <div class="wrapper">
+            <strong>This is the website Project of:</strong><br>
+            <br>
+            Group Nr.: 18<br><br>
+            <table>
+                <tr>
+                    <td>Nicole Neumark<br>22205530<br>nicole.neumark@ucdconnect.ie</td>
+                    <td>Florian Lechner<br>22203610<br>florian.lechner@ucdconnect.ie</td>
+                </tr>
+            </table>
+        </div>
+    </footer>
+    
+    <script>
+        
+        
+        var xmlhttp = new XMLHttpRequest();
+        var url = "\senators.json";
+        
+        
+        // creating global variables for the file content
+        var senator_file
+        var senator_list
+        
+        // Import of the JSON File
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var file = JSON.parse(xmlhttp.responseText);
+                saveData(file);
+                totals();
+                createFilter();
+                senators();
+            }
+        };
+
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+        
+        
+        function saveData(file) {
+            // Saving JSON Data into global variables, so that they can be accessed from every function and do not need to be handed over as attribute every time.
+            senator_file = file
+            senator_list = file["objects"]
+        }
+
+        function totals() {
+            // Calculates the number of party members and creates tables for them. It also adds the leaders to the tables.
+            const parties = {};
+            const leaders = [];
+            for (let i = 0; i < senator_list.length; i++) {
+                curr_party = senator_list[i].party
+                if(curr_party in parties) {
+                    parties[curr_party] += 1;
+                } else {
+                    parties[curr_party] = 1;
+                }
+                if(senator_list[i].leadership_title != null){
+                    leaders.push([senator_list[i].party, senator_list[i].person.name ,senator_list[i].leadership_title]);
+                    
+                }
+            }
+            
+            var tables = "";
+            for (const [key, value] of Object.entries(parties)) {
+                tables += "<table><tr><th>" + key + "s</th><th>" + value + "</th><tr>";
+                for (i in leaders) {
+                    leader = leaders[i]
+                    if (leader[0] == key) {
+                        tables += "<tr><td>"+leader[2]+"</td><td>"+leader[1].slice(0, -7)+"</td></tr>"
+                    }
+                }
+                tables += "</table>";
+            }
+            document.getElementById("total").innerHTML = tables;
+          
+        }
+        
+        function createFilter() {
+            //Dynamicly generates the Filter
+            var f_party = ["Party"];
+            var f_state = ["State"];
+            var f_rank = ["Rank"];
+            for (let i = 0; i < senator_list.length; i++) {
+                if (!(f_party.includes(senator_list[i].party))) {
+                    f_party.push(senator_list[i].party);
+                }
+                if (!(f_state.includes(senator_list[i].state + " - " + senator_list[i].description.slice(19,)))) {
+                    // For better readability we add to the state abbreviation the name of the state out of the description
+                    f_state.push(senator_list[i].state + " - " + senator_list[i].description.slice(19,));
+                }
+                if (!(f_rank.includes(senator_list[i].description.slice(0, 6)))) { 
+                    //senator_list[i].senator_rank - Instead of using the rank field we use the rank string from the description field as their the first letter is capatilised and this improves the appearance on the website.
+                    f_rank.push(senator_list[i].description.slice(0, 6));
+                }
+            }
+            
+            filter = [f_party, f_state, f_rank];
+            f_output = ""
+            for (let cat = 0; cat < filter.length; cat++) {
+                f_output += '<label>' + filter[cat][0] + ':</label><select class="browser-default" id="' + filter[cat][0] + '" onchange="senators()"><option value="all" selected="selected">Show all</option>'
+                for (let i = 1; i < filter[cat].length; i++) {
+                    f_output += '<option value="' + filter[cat][i] + '">' + filter[cat][i] + '</option>'
+                }
+                f_output += '</select>'
+            }
+            f_output += '<span id="remove_filter" onclick="createFilter(); senators();">Remove all filters</span>'
+            document.getElementById("filter").innerHTML = f_output;
+        }
+        
+        function senators() {
+            // This function generates a tile for each senator that complies to the current filter.
+            var f_party = document.getElementById("Party");
+            var p_value = f_party.value;
+            var f_state = document.getElementById("State");
+            var s_value = f_state.value;
+            var f_rank = document.getElementById("Rank");
+            var r_value = f_rank.value;
+            
+            if(p_value != "all" || s_value != "all" || r_value != "all") {
+                document.getElementById("remove_filter").style.display = "unset";
+            }
+            
+            var output = new String();
+            for (let i = 0; i < senator_list.length; i++) {
+                curr_sen = senator_list[i];
+                // If condidtion checks if current senator complies with the current filter.
+                if((p_value == "all" || p_value == curr_sen.party) && (s_value == "all" || s_value == curr_sen.state+ " - " + senator_list[i].description.slice(19,)) && (r_value == "all" || r_value == curr_sen.description.slice(0, 6))){
+                    output += '<div class="sen_tile" id="' + i + '-w"><div class="main_details"><span class="first_line">' + curr_sen.party + '&nbsp;&nbsp;•&nbsp;&nbsp;' + curr_sen.person.gender_label + '</span><div class="name">' + curr_sen.person.name.slice(0, -7) + '</div><div class="title">' + curr_sen.description + '</div><div class="show_details"> <span onclick="expand('+ i +',false)">show details</span></div></div><div class="details"></div></div>';
+                }
+            }
+            document.getElementById("senators").innerHTML = output;
+        }
+        
+        function expand(id, close) {
+            // Expands the selected tile to show the additional information.
+            curr_sen = senator_list[id];
+            const sel_sen = document.getElementById(id+"-w");
+            const detail_button = sel_sen.getElementsByClassName("show_details")[0];
+            const details = sel_sen.getElementsByClassName("details")[0];
+            if (!close) { //show details
+                sel_sen.style.width = '772px';
+                detail_button.innerHTML = '<span onclick="expand('+ id +',true)">close details</span>';
+                var details_output = new String('<table><tr><td>Office:</td><td>' + curr_sen.extra.office + '</td></tr><tr><td>Birthday:</td><td>' + dateToString(curr_sen.person.birthday) + '</td></tr><tr><td>Start Date:</td><td>' + dateToString(curr_sen.startdate) + '</td></tr>');
+                if (curr_sen.person.twitterid != "") {
+                    details_output += '<tr><td>Twitter ID:</td><td>' + curr_sen.person.twitterid + '</td></tr>';
+                }
+                if (curr_sen.person.youtubeid != "") {
+                    details_output += '<tr><td>Youtube ID:</td><td>' + curr_sen.person.youtubeid + '</td></tr>';
+                }
+                details_output +='<tr><td>Website:</td><td><a href="' + curr_sen.website + '" target="_blank" rel="noopener noreferrer">' + curr_sen.website + '</a></td></tr>';
+                details.innerHTML = details_output;
+                
+            } else { //close details
+                sel_sen.style.width = '380px';
+                detail_button.innerHTML = '<span onclick="expand('+ id +',false)">show details</span>';
+                details.innerHTML = '';
+            }
+            
+        }
+        
+        function dateToString(string) {
+            // Formats dates in a readable format
+            var res = new String(string.slice(8, 10) + "." + string.slice(5, 7) + "." + string.slice(0, 4))
+            return res
+        }
+        
+        
+    </script>
+    
+</body>
+</html>
